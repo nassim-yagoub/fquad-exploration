@@ -1,0 +1,10 @@
+numpy
+pandas
+matplotlib
+random
+tqdm
+nltk
+sklearn
+torch
+transformers
+-e .
