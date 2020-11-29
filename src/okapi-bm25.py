@@ -2,6 +2,7 @@ import os
 import random
 import math
 import json
+import argparse
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -107,7 +108,6 @@ class OkapiBM25:
 
         self.avg_dl_train = average([bow_len(bow) for bow in self.train_bows])
         self.avg_dl_valid = average([bow_len(bow) for bow in self.valid_bows])
-
 
     def create_idf_stores(self):
         if not os.path.exists("../data/idf_store_train.json"):
@@ -252,6 +252,14 @@ class OkapiBM25:
 
 if __name__ == "__main__":
 
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--dataset", type=str)
+    parser.add_argument("--number", type=int)
+
+    args = parser.parse_args()
+
     okapi = OkapiBM25()
 
-    okapi.top_k_precision("train", 3)
+    okapi.top_k_precision(args.dataset, args.number)
+    
