@@ -148,7 +148,7 @@ class OkapiBM25:
 
         else:
             print("Loading precomputed IDF values for the validation set...")
-            with open("../data/idf_store_train.json", 'r') as file:
+            with open("../data/idf_store_valid.json", 'r') as file:
                 self.idf_store_valid = json.load(file)
             print("Values loaded !")
 
@@ -254,12 +254,20 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--dataset", type=str)
-    parser.add_argument("--number", type=int)
+    parser.add_argument("--task", type=str, default='precision')
+    parser.add_argument("--dataset", type=str, default='train')
+    parser.add_argument("--number", type=int, default=1)
+    parser.add_argument("--question", type=str)
 
     args = parser.parse_args()
 
     okapi = OkapiBM25()
 
-    okapi.top_k_precision(args.dataset, args.number)
+    if args.task == 'precision':
+        okapi.top_k_precision(args.dataset, args.number)
+
+    elif args.task == 'selection':
+        stemmer = SnowballStemmer("french")
+        question = [stemmer.stem(word) for word in remove_stopwords(args.question.split())]
+        print(okapi.get_best_fits(question, args.number, args.dataset, text = True))
     
