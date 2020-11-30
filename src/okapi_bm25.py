@@ -222,7 +222,7 @@ class OkapiBM25:
 
         return scores[:prediction_nb]
 
-    def top_k_precision(self, dataset_type, prediction_nb):
+    def topk_precision(self, dataset_type, prediction_nb):
         # Computes the precision on the train or the test set, which are treated the same way with this approach
 
         if dataset_type == "train":
@@ -258,17 +258,25 @@ if __name__ == "__main__":
     parser.add_argument("--task", type=str, default='precision')
     parser.add_argument("--dataset", type=str, default='train')
     parser.add_argument("--number", type=int, default=1)
-    parser.add_argument("--question", type=str)
+    parser.add_argument("--question", type=str, default="random")
 
     args = parser.parse_args()
 
     okapi = OkapiBM25()
 
     if args.task == 'precision':
-        okapi.top_k_precision(args.dataset, args.number)
+        okapi.topk_precision(args.dataset, args.number)
 
     elif args.task == 'selection':
         stemmer = SnowballStemmer("french")
-        question = [stemmer.stem(word) for word in remove_stopwords(args.question.split())]
-        print(okapi.get_best_fits(question, args.number, args.dataset, text = True))
+        if args.question == "random":
+            if args.dataset == "train":
+                question = random.choice(okapi.train_q)
+            else:
+                question = random.choice(okapi.valid_q)
+        else:
+            question = [stemmer.stem(word) for word in remove_stopwords(args.question.split())]
+        print(question)
+        for context in okapi.get_best_fits(question, args.number, args.dataset, text = True):
+            print(context)
     
