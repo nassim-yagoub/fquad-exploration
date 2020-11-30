@@ -1,5 +1,6 @@
 # fquad-exploration
 FQuAD is the first French Question Answering Dataset, it has been developped by Illuin Technology and presented in this paper: https://arxiv.org/pdf/2002.06071.pdf
+
 This package allows the user to select parts of the FQuAD dataset that are likely to respond to a given question.
 
 ## Okapi-BM25
@@ -21,4 +22,4 @@ It makes it impossible to obtain trustable results, we can assume from the first
 
 Another possibility not implemented yet is to use CamemBERT to obtain embeddings of the questions and answers and create a metric of similarity for those embeddings. For example by computing the cosine of those vectors. However, the interesting part of the context might be very limited and most of the context may not present a strong similarity with the question.
 
-This approach would reduce the complexity by limiting the number of calls to the model from Q * C et Q + C with Q the number of questions and C the number of contexts.
+This approach would reduce the complexity by limiting the number of calls to the model from Q * C to Q + C with Q the number of questions and C the number of contexts.
