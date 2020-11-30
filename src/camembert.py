@@ -1,5 +1,8 @@
 import os
 import argparse
+import random
+import torch
+
 import numpy as np
 import pandas as pd
 
@@ -43,12 +46,17 @@ class CamembertSelector:
         self.train_q, self.train_a, self.train_id_to_ans = create_qa(self.train_df)
         self.valid_q, self.valid_a, self.valid_id_to_ans = create_qa(self.valid_df)
 
+        random.Random(42).shuffle(self.train_a)
+        random.Random(42).shuffle(self.valid_a)
+        random.Random(42).shuffle(self.train_q)
+        random.Random(42).shuffle(self.valid_q)
+
         self.cuda = cuda
 
         if cuda:
             self.model = self.model.cuda()
 
-    def choose_best_contexts(self, question, dataset_type, number = 1):
+    def choose_best_contexts(self, question, dataset_type, number = 1, limited_context = None):
 
         scores = []
 
@@ -57,7 +65,12 @@ class CamembertSelector:
         else:
             contexts = self.valid_contexts
 
-        for i in range(len(contexts)):
+        if not limited_context is None:
+            iterator = limited_context
+        else:
+            iterator = range(len(contexts))
+
+        for i in iterator:
 
             context = contexts[i]
 
@@ -70,7 +83,8 @@ class CamembertSelector:
                 inputs['input_ids'] = inputs['input_ids'][:,:510]
                 inputs['attention_mask'] = inputs['attention_mask'][:,:510]
 
-            outputs = self.model(**inputs)
+            with torch.no_grad():
+                outputs = self.model(**inputs)
                 
             start_scores = outputs.start_logits
             end_scores = outputs.end_logits
