@@ -240,7 +240,8 @@ class OkapiBM25:
 
         for i in iterator:
             question = questions[i]
-            good_ids = [self.get_best_fits(question, prediction_nb, dataset_type)[i][0] for i in range(prediction_nb)]
+            best_fits = self.get_best_fits(question, prediction_nb, dataset_type)
+            good_ids = [best_fits[i][0] for i in range(prediction_nb)]
             
             if id_to_ans[tuple(answers[i])] in good_ids:
                 correct += 1
