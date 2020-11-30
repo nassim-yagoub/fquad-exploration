@@ -1,5 +1,6 @@
 # fquad-exploration
-This package allows the user to select parts of the fquad dataset that are likely to respond to a given question.
+FQuAD is the first French Question Answering Dataset, it has been developped by Illuin Technology and presented in this paper: https://arxiv.org/pdf/2002.06071.pdf
+This package allows the user to select parts of the FQuAD dataset that are likely to respond to a given question.
 
 ## Okapi-BM25
 
