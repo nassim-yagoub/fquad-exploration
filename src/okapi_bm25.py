@@ -72,9 +72,6 @@ def process_dataset(df):
 
     questions = [[stemmer.stem(word) for word in remove_stopwords(question.split())] for question in questions]
 
-    random.Random(42).shuffle(questions)
-    random.Random(42).shuffle(answers)
-
     return bows, questions, answers, id_to_ans
 
 class OkapiBM25:
@@ -91,6 +88,11 @@ class OkapiBM25:
 
         self.train_bows, self.train_q, self.train_a, self.train_id_to_ans = process_dataset(self.train_df)
         self.valid_bows, self.valid_q, self.valid_a, self.valid_id_to_ans = process_dataset(self.valid_df)
+
+        random.Random(42).shuffle(self.train_a)
+        random.Random(42).shuffle(self.valid_a)
+        random.Random(42).shuffle(self.train_q)
+        random.Random(42).shuffle(self.valid_q)
 
         self.nb_doc_train = 0
 

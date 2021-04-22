@@ -131,7 +131,7 @@ if __name__ == "__main__":
     parser.add_argument("--task", type=str, default='precision')
     parser.add_argument("--dataset", type=str, default='train')
     parser.add_argument("--number", type=int, default=1)
-    parser.add_argument("--question", type=str)
+    parser.add_argument("--question", type=str, default="random")
 
     args = parser.parse_args()
 
@@ -141,4 +141,11 @@ if __name__ == "__main__":
         selector.get_performance(args.dataset, args.number)
 
     elif args.task == 'selection':
-        pass
+        if args.question == "random":
+            if args.dataset == "train":
+                question = random.choice(selector.train_q)
+            else:
+                question = random.choice(selector.valid_q)
+        
+        for context in selector.choose_best_contexts(question, args.dataset, args.number):
+            print(context)
